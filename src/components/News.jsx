@@ -8,7 +8,7 @@ const Newz = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/welcome', { text });
+      const response = await axios.post('https://hack-backrepo.onrender.com/welcome', { text });
 
       // Assuming the server sends a response with `output` and `status` keys
       setOutput(response.data.output);

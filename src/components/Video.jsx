@@ -45,7 +45,7 @@ const Video = () => {
       setMessage(`Video uploaded successfully!`);
 
       // Send File URL to the API
-      const apiResponse = await axios.post('http://localhost:3000/welcome', {
+      const apiResponse = await axios.post('https://hack-backrepo.onrender.com/welcome', {
         text: ""+fileViewUrl,
       });
 
