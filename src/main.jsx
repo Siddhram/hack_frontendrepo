@@ -10,6 +10,7 @@ import Newz from './components/News.jsx';
 import Image from './components/Image.jsx';
 import AppwriteFileManager from './components/AppwriteFileManager.jsx';
 import Video from './components/Video.jsx';
+import Transcript from './components/Transcript.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,10 +21,11 @@ createRoot(document.getElementById('root')).render(
          <Route path='news' element={<Newz></Newz>}></Route>
                   <Route path='images' element={<Image></Image>}></Route>
          <Route path='videos' element={<Video></Video>}></Route>
+         <Route path='transcript' element={<Transcript></Transcript>}></Route>
 
         </Route>
 
-        <Route path='/about' element={<AppwriteFileManager></AppwriteFileManager>}></Route>
+        <Route path='/about' element={<Transcript></Transcript>}></Route>
                 <Route path='/contact' element={<div>contact</div>}></Route>
 
       </Routes>

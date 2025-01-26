@@ -101,6 +101,31 @@ onClick={()=>{
 </div>
 
        {/*  */}
+<div class="max-w-sm mx-auto bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+  <a href="#" title="" class="block">
+    <img
+      class="object-cover w-full h-48 rounded-t-lg"
+      src="https://plus.unsplash.com/premium_photo-1707487484371-b2e87ec211b6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGZha2UlMjBpbWFnZSUyMGFsZXJ0fGVufDB8fDB8fHww"
+      alt="Blog Image"
+    />
+  </a>
+  <div class="p-6 text-center">
+    <p class="text-lg font-bold text-gray-800">
+Transcript analysis    </p>
+    <p class="mt-4 text-sm font-semibold text-gray-600">
+      Detect Tempered or manipulated images
+    </p>
+    <div class="mt-6">
+      <button
+onClick={()=>{
+  navigate("/transcript")
+}}          class="inline-block px-6 py-2 text-sm font-medium text-white bg-sky-500 rounded-full shadow hover:bg-sky-600 transition-colors duration-300"
+      >
+        Transcript Analysis
+      </button>
+    </div>
+  </div>
+</div>
 
         </div>
     </div>

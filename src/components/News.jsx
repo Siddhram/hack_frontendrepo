@@ -8,11 +8,11 @@ const Newz = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('https://hack-backrepo.onrender.com/welcome', { text });
+      const response = await axios.post('https://fake-news-detection-fjr4.onrender.com/verify-news', { news_query:text });
 
       // Assuming the server sends a response with `output` and `status` keys
-      setOutput(response.data.output);
-      setStatus(response.data.status); // Status can be "Fake" or "Real"
+      setOutput(response.data.llama_response);
+      // setStatus(response.data.status); // Status can be "Fake" or "Real"
     } catch (error) {
       const errorMessage = error.response?.data?.error || 'Something went wrong';
       console.error('Error:', errorMessage);
@@ -55,13 +55,13 @@ const Newz = () => {
         <div className="max-w-xl mx-auto mt-12 p-6 border border-gray-200 rounded-lg shadow-xl bg-white">
           <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-semibold text-gray-600">Fake or Real:</span>
-            <span
+            {/* <span
               className={`text-xl font-bold ${
                 status === 'Fake' ? 'text-red-600' : 'text-green-600'
               }`}
             >
               {status}
-            </span>
+            </span> */}
           </div>
           <p className="text-gray-800">
             <strong>Output:</strong> {output}
