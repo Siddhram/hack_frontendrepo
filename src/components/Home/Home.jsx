@@ -1,34 +1,38 @@
-import React from "react"
-import Hero from "../Hero/Hero"
-import FeatureCard from "../FeatureCard/FeatureCard"
-import Chatbot from "../chatbot/Chatbot"
+import React from "react";
+import Hero from "../Hero/Hero";
+import FeatureCard from "../FeatureCard/FeatureCard";
+import Chatbot from "../chatbot/Chatbot";
+import { useNavigate } from "react-router-dom";
+
 export default function Home() {
+  const navigate = useNavigate();
+
   const features = [
     {
-      color:"hover:shadow-[0_0_26px_20px_rgba(219,234,254,1)]",
-      btntext:"Get Started",
+      color: "hover:shadow-[0_0_26px_20px_rgba(219,234,254,1)]",
+      btntext: "Get Started",
       title: "Fact Checker",
       description: "Verify the authenticity of written content",
       image: "/src/assets/text.jpg",
-      onClick: () => console.log("Text analysis clicked"),
+      onClick: () => navigate("/news"), // Navigate to "news"
     },
     {
-      color:"hover:shadow-[0_0_26px_20px_rgba(220,252,231,1)]",
-      btntext:"Start Analysis",
+      color: "hover:shadow-[0_0_26px_20px_rgba(220,252,231,1)]",
+      btntext: "Start Analysis",
       title: "Image Inspector",
       description: "Detect tampered or manipulated images",
       image: "/src/assets/photo.jpg",
-      onClick: () => console.log("Photo analysis clicked"),
+      onClick: () => navigate("/photos"), // Navigate to "photos"
     },
     {
-      color:"hover:shadow-[0_0_26px_20px_rgba(234,232,255,1)]",
-      btntext:"Analyze Now",
+      color: "hover:shadow-[0_0_26px_20px_rgba(234,232,255,1)]",
+      btntext: "Analyze Now",
       title: "Deepfake Detector",
       description: "Identify and expose fake or altered videos",
       image: "/src/assets/video.jpg",
-      onClick: () => console.log("Video analysis clicked"),
+      onClick: () => navigate("/videos"), // Navigate to "videos"
     },
-  ]
+  ];
 
   return (
     <div className="static min-h-screen bg-gray-50">
@@ -40,9 +44,9 @@ export default function Home() {
           ))}
         </div>
       </main>
-        <div className="fixed bottom-16 right-10 justify-self-end">
-        <Chatbot/>
-        </div>
+      <div className="fixed bottom-16 right-10 justify-self-end">
+        <Chatbot />
+      </div>
     </div>
-  )
+  );
 }
