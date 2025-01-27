@@ -1,186 +1,191 @@
-import { useState, useRef } from "react"
-import React from "react"
-import { storage, ID } from "../Lib/Appwrite";
+import React, { useState, useCallback } from "react";
+import { Client, Storage, ID } from "appwrite";
+import { useDropzone } from "react-dropzone";
 
-export default function VideoUpload() {
-  const [dragActive, setDragActive] = useState(false)
-  const [videoUrl, setVideoUrl] = useState("")
-  const [urlInput, setUrlInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const inputRef = useRef(null)
+// Initialize Appwrite
+const client = new Client()
+  .setEndpoint("https://cloud.appwrite.io/v1") // Replace with your Appwrite endpoint
+  .setProject("6786b37a000e1a5e8c68"); // Replace with your project ID
 
-  const handleDrag = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
-    } else if (e.type === "dragleave") {
-      setDragActive(false)
-    }
-  }
+const storage = new Storage(client);
 
-  const handleDrop = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
+function VideoUpload() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null);
+  const [urlInput, setUrlInput] = useState("");
 
-    const file = e.dataTransfer.files[0]
-    if (file && file.type.startsWith("video/")) {
-      await handleFile(file)
-    }
-  }
-
-  const handleChange = async (e) => {
-    e.preventDefault()
-    if (e.target.files?.[0]) {
-      await handleFile(e.target.files[0])
-    }
-  }
-
-  const handleFile = async (file) => {
-    setIsLoading(true)
-    setUploadProgress(0)
+  const uploadFile = async (file) => {
     try {
-      // Upload to Appwrite Storage
+      setIsUploading(true);
+      setError(null);
+
+      // Create a preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+
+      // Upload the file to Appwrite
       const response = await storage.createFile(
-        "videos", // Replace with your bucket ID
+        "6786b6e90012a9d714fd", // Replace with your bucket ID
         ID.unique(),
-        file,
-        [],
-        onProgress,
-      )
+        file
+      );
 
-      // Get video URL
-      const fileUrl = storage.getFileView("videos", response.$id)
-      setVideoUrl(fileUrl)
-      console.log("Video uploaded successfully:", response)
-    } catch (error) {
-      console.error("Error uploading video:", error)
-      alert("Error uploading video. Please try again.")
+      // Generate public URL for the uploaded file
+      const fileUrl = storage.getFileView("videos", response.$id); // Replace with your bucket ID
+      setVideoUrl(fileUrl);
+      console.log("File uploaded successfully:", fileUrl);
+    } catch (err) {
+      setError(err.message);
+      console.error("Upload failed:", err);
     } finally {
-      setIsLoading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
-  const onProgress = (progress) => {
-    setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
-  }
+  const uploadFromUrl = async (url) => {
+    try {
+      setIsUploading(true);
+      setError(null);
 
-  const handlePaste = async (e) => {
-    const items = e.clipboardData?.items
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf("video") !== -1) {
-          const file = items[i].getAsFile()
-          await handleFile(file)
-          break
-        }
+      // Download the file from the URL and create a File object
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], "video.mp4", { type: blob.type });
+
+      await uploadFile(file);
+    } catch (err) {
+      setError(err.message);
+      console.error("Failed to upload from URL:", err);
+    } finally {
+      setIsUploading(false);
+      setUrlInput(""); // Clear the URL input
+    }
+  };
+
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        await uploadFile(acceptedFiles[0]);
       }
-    }
-  }
+    },
+    [uploadFile]
+  );
 
-  const handleUrlSubmit = async (e) => {
-    e.preventDefault()
-    if (urlInput) {
-      setIsLoading(true)
-      try {
-        setVideoUrl(urlInput)
-        // Here you would typically validate and process the URL
-        console.log("Processing URL:", urlInput)
-      } catch (error) {
-        console.error("Error processing URL:", error)
-      } finally {
-        setIsLoading(false)
-        setUrlInput("")
-      }
-    }
-  }
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "video/*": [".mp4", ".mov", ".avi", ".mkv"],
+    },
+    multiple: false,
+  });
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">Upload a video to detect</h1>
-        <h2 className="mt-3 text-3xl font-bold text-gray-900"><span className="text-red-700">Fake</span> or <span className="text-green-700">Real</span></h2>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Upload a video to detect</h1>
+        <h2 className="text-4xl font-bold text-gray-900">
+          <span className="text-red-700">Fake</span> or <span className="text-green-700">Real</span>
+        </h2>
       </div>
 
       <div className="mt-12">
+        {/* Drag-and-Drop Section */}
         <div
-          className={`relative border-2 border-dashed rounded-lg p-12 text-center ${
-            dragActive ? "border-blue-600 bg-blue-50" : "border-gray-300"
+          {...getRootProps()}
+          className={`border-2 border-dashed rounded-lg p-12 ${
+            isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
           }`}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          onPaste={handlePaste}
         >
-          <input ref={inputRef} type="file" className="hidden" accept="video/*" onChange={handleChange} />
-
-          {videoUrl ? (
-            <div className="space-y-4">
-              <video src={videoUrl} controls className="max-h-64 mx-auto rounded-lg" />
-              <button onClick={() => setVideoUrl("")} className="text-sm text-red-600 hover:text-red-500">
-                Remove video
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <button
-                onClick={() => inputRef.current?.click()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                disabled={isLoading}
-              >
-                {isLoading ? "Processing..." : "Upload Video"}
-              </button>
-              <p className="text-sm text-gray-600">
-                or drop a file,
-                <br />
-                paste video or{" "}
-                <button
-                  onClick={() => document.getElementById("urlInput").focus()}
-                  className="text-blue-600 hover:text-blue-500"
-                >
-                  URL
-                </button>
-              </p>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="mt-4">
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">{uploadProgress}% uploaded</p>
-            </div>
-          )}
+          <input {...getInputProps()} />
+          <div className="text-center">
+            <button
+              type="button"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Upload Video
+            </button>
+            <p className="mt-2 text-sm text-gray-600">or drop a video file</p>
+          </div>
         </div>
 
-        <form onSubmit={handleUrlSubmit} className="mt-4">
-          <div className="flex gap-2">
+        {/* URL Input Section */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (urlInput) uploadFromUrl(urlInput);
+          }}
+          className="mt-8"
+        >
+          <label htmlFor="urlInput" className="block text-lg font-medium text-gray-700">
+            Upload via URL
+          </label>
+          <div className="flex gap-2 mt-2">
             <input
               id="urlInput"
               type="url"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="Paste video URL here"
-              className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              placeholder="Enter video URL"
+              className="flex-1 pl-2 rounded-md border-2 border-gray-400 focus:border-blue-500 focus:ring-blue-500"
             />
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              disabled={!urlInput || isLoading}
+              disabled={!urlInput || isUploading}
             >
               Submit
             </button>
           </div>
         </form>
+
+        {/* Upload Progress */}
+        {isUploading && (
+          <div className="mt-4 text-center">
+            <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-blue-500 transition ease-in-out duration-150">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Uploading...
+            </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && <div className="mt-4 text-center text-red-600">{error}</div>}
+
+        {/* Preview Section */}
+        {preview && (
+          <div className="mt-8">
+            <video
+              src={preview}
+              controls
+              className="w-3xs h-auto mx-auto rounded-lg shadow-lg"
+            ></video>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
+export default function App() {
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      <main className="flex-1">
+        <VideoUpload />
+      </main>
+    </div>
+  );
+}

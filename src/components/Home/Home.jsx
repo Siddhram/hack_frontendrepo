@@ -9,7 +9,7 @@ export default function Home() {
 
   const features = [
     {
-      color: "hover:shadow-[0_0_26px_20px_rgba(219,234,254,1)]",
+      color: "hover:shadow-[0_0_20px_30px_rgba(219,234,254,1)]",
       btntext: "Get Started",
       title: "Fact Checker",
       description: "Verify the authenticity of written content",
@@ -17,7 +17,7 @@ export default function Home() {
       onClick: () => navigate("/news"), // Navigate to "news"
     },
     {
-      color: "hover:shadow-[0_0_26px_20px_rgba(220,252,231,1)]",
+      color: "hover:shadow-[0_0_20px_30px_rgba(220,252,231,1)]",
       btntext: "Start Analysis",
       title: "Image Inspector",
       description: "Detect tampered or manipulated images",
@@ -25,7 +25,7 @@ export default function Home() {
       onClick: () => navigate("/photos"), // Navigate to "photos"
     },
     {
-      color: "hover:shadow-[0_0_26px_20px_rgba(234,232,255,1)]",
+      color: "hover:shadow-[0_0_20px_30px_rgba(234,232,255,1)]",
       btntext: "Analyze Now",
       title: "Deepfake Detector",
       description: "Identify and expose fake or altered videos",
