@@ -11,6 +11,7 @@ import Image from './components/Image.jsx';
 import AppwriteFileManager from './components/AppwriteFileManager.jsx';
 import Video from './components/Video.jsx';
 import Transcript from './components/Transcript.jsx';
+import Voice from './Voice.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -25,7 +26,7 @@ createRoot(document.getElementById('root')).render(
 
         </Route>
 
-        <Route path='/about' element={<Transcript></Transcript>}></Route>
+        <Route path='/about' element={<Voice></Voice>}></Route>
                 <Route path='/contact' element={<div>contact</div>}></Route>
 
       </Routes>
