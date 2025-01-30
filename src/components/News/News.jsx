@@ -42,7 +42,7 @@ export default function ImageUpload() {
 
     // Split the response at "Justification:"
     const [beforeJustification, afterJustification] = responseText.split("Justification:");
-    
+
     // Check for "Real" or "Fake" in the first part of the response
     const highlightedPart = beforeJustification.replace(/\b(Real|Fake)\b/gi, (match) => {
       const colorClass = match.toLowerCase() === "real" ? "text-green-700" : "text-red-700";

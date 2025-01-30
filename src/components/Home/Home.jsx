@@ -30,7 +30,23 @@ export default function Home() {
       title: "Deepfake Detector",
       description: "Identify and expose fake or altered videos",
       image: "/src/assets/video.jpg",
-      onClick: () => navigate("/videos"), // Navigate to "videos"
+      onClick: () => window.location.href = "http://192.168.0.100:8000/", // Navigate to "videos"
+    },
+    {
+      color: "hover:shadow-[0_0_20px_30px_rgba(234,232,255,1)]",
+      btntext: "Analyze Now",
+      title: "Transcript Detector",
+      description: "Identify and expose fake or altered videos",
+      image: "/src/assets/video.jpg",
+      onClick: () => navigate("/transcript"), // Navigate to "videos"
+    },
+    {
+      color: "hover:shadow-[0_0_20px_30px_rgba(234,232,255,1)]",
+      btntext: "Analyze Now",
+      title: "Social Media Detector",
+      description: "Identify and expose fake or altered videos",
+      image: "/src/assets/video.jpg",
+      onClick: () => window.location.href = "http://192.168.0.100:8000/", // Navigate to "videos"
     },
   ];
 

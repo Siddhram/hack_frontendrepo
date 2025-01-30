@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { Client, Storage, ID } from "appwrite";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
+import Practice from "../Practice";
 
 // Initialize Appwrite
 const client = new Client()
@@ -15,6 +17,7 @@ function ImageUpload() {
   const [preview, setPreview] = useState(null);
   const [fileUrl, setFileUrl] = useState(null);
   const [urlInput, setUrlInput] = useState("");
+  const [status, setStatus] = useState(null); // New state to hold image status (real/fake)
 
   const uploadImage = async (file) => {
     try {
@@ -37,7 +40,16 @@ function ImageUpload() {
       console.log("File uploaded successfully. File URL:", fileUrl);
 
       // Set the public URL for further use
-      setFileUrl(fileUrl); // Store the file URL
+      setFileUrl(fileUrl);
+
+      // Send the file URL to the API for deepfake detection
+      const apiResponse = await axios.post("http://192.168.0.100:8000/api/detect/", {
+        image_url: fileUrl,
+      });
+
+      // Extract the deepfake status and set it in the state
+      setStatus(apiResponse.data.is_deepfake=="fake" ? "Fake" : "Real"); // Set status based on the API response
+      console.log("Deepfake status:", apiResponse.data.is_deepfake);
     } catch (err) {
       setError(err.message);
       console.error("Upload failed:", err);
@@ -178,6 +190,7 @@ function ImageUpload() {
             </div>
           </div>
         )}
+
         {/* Preview Image */}
         {preview && (
           <div className="mt-8">
@@ -188,6 +201,20 @@ function ImageUpload() {
             />
           </div>
         )}
+
+        {/* Display Image Status */}
+        {status && (
+          <div className="mt-4 text-center text-xl font-semibold text-gray-900">
+            {status === "Fake" ? (
+              <span >This image is: <span className="text-red-500">Fake</span></span>
+            ) : (
+              <span >This image is: <span className="text-green-500">Real</span></span>
+            )}
+          </div>
+        )}
+        <div className="flex justify-center mt-2.5">
+          {fileUrl?<Practice imageurl={fileUrl} />:<div></div>}
+        </div>
       </div>
     </div>
   );
