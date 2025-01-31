@@ -1,71 +1,44 @@
-import { Link } from "react-router-dom"
-import React from "react"
+import React from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-[#1a1f36] text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <img className="w-10" src="/src/assets/Factlogo.png" alt="" />
+              <img className="w-10" src="/src/assets/Factlogo.png" alt="FactShield Logo" />
               <span className="text-2xl">FactShield</span>
             </div>
-            <p className="text-gray-400">AI for Fake News detection</p>
+            <p className="text-gray-400">{t("aiFakeNews")}</p>
           </div>
+
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("quickLinks")}</h3>
             <ul className="space-y-2">
-              <li>
-                <Link to="/about" className="text-gray-400 hover:text-white">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/chat" className="text-gray-400 hover:text-white">
-                  Chat Bot
-                </Link>
-              </li>
-              <li>
-                <Link to="/features" className="text-gray-400 hover:text-white">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-white">
-                  Contact
-                </Link>
-              </li>
+              <li><Link to="/about" className="text-gray-400 hover:text-white">{t("about")}</Link></li>
+              <li><Link to="/chat" className="text-gray-400 hover:text-white">{t("chatBot")}</Link></li>
+              <li><Link to="/features" className="text-gray-400 hover:text-white">{t("features")}</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-white">{t("contactUs")}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("support")}</h3>
             <ul className="space-y-2">
-              <li>
-                <Link to="/help" className="text-gray-400 hover:text-white">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="text-gray-400 hover:text-white">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" className="text-gray-400 hover:text-white">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="text-gray-400 hover:text-white">
-                  FAQ
-                </Link>
-              </li>
+              <li><Link to="/help" className="text-gray-400 hover:text-white">{t("helpCenter")}</Link></li>
+              <li><Link to="/terms" className="text-gray-400 hover:text-white">{t("termsOfService")}</Link></li>
+              <li><Link to="/privacy" className="text-gray-400 hover:text-white">{t("privacyPolicy")}</Link></li>
+              <li><Link to="/faq" className="text-gray-400 hover:text-white">{t("faq")}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Connect</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("connect")}</h3>
             <div className="flex space-x-4">
               <Link to="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">Twitter</span>
@@ -83,10 +56,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-          <p>© 2025 FactShield. All rights reserved.</p>
+          <p>© 2025 FactShield. {t("allRightsReserved")}</p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
-
