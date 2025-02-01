@@ -43,7 +43,7 @@ function ImageUpload() {
       setFileUrl(fileUrl);
 
       // Send the file URL to the API for deepfake detection
-      const apiResponse = await axios.post("http://192.168.0.100:8000/api/detect/", {
+      const apiResponse = await axios.post("http://192.168.114.171:8080/api/detect/", {
         image_url: fileUrl,
       });
 
@@ -213,7 +213,7 @@ function ImageUpload() {
           </div>
         )}
         <div className="flex justify-center mt-2.5">
-          {fileUrl?<Practice imageurl={fileUrl} />:<div></div>}
+          {/* {fileUrl?<Practice imageurl={fileUrl} />:<div></div>} */}
         </div>
       </div>
     </div>

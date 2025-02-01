@@ -13,6 +13,7 @@ import Videos from "./components/Videos/Videos";
 import i18n from "./components/i18next/i18n"; // Import i18n
 import { I18nextProvider } from "react-i18next"; // Import Provider
 import Transcript from "./components/Transcript/Transcript";
+import Socialmedia from "./components/Socialmedia/Socialmedia"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path="photos" element={<Photos />} />
       <Route path="videos" element={<Videos />} />
       <Route path="transcript" element={<Transcript/>}/>
+      <Route path="socialmedia" element={<Socialmedia/>}/>
     </Route>
   )
 );
